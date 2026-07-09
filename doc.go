@@ -3,8 +3,9 @@
 //
 // The Client implements ai.Client, so Generate and Stream work the same as
 // with any other goloop AI provider. On top of that it exposes Ollama's native
-// endpoints: /api/chat (with tool use and image input), embeddings and the
-// installed-model list. Ollama streams newline-delimited JSON rather than
+// endpoints: /api/chat (with tool use and image input), embeddings, the
+// installed-model list and per-model details (Show). Ollama streams
+// newline-delimited JSON rather than
 // Server-Sent Events; Stream hides that difference.
 //
 //	c := ollama.New("") // local server, no API key

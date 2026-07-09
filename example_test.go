@@ -28,6 +28,17 @@ func ExampleClient_Generate() {
 	// Output: llama3.2 1
 }
 
+// ExampleClient_Show notes the per-model details endpoint. Show returns the
+// model's template, parameters, capabilities and architecture fields (such as
+// its context length). Calling it needs a running server, so this example only
+// names the target model.
+func ExampleClient_Show() {
+	c := ollama.New("")
+	_ = c // info, _ := c.Show(ctx, ollama.ModelLlama32)
+	fmt.Println(ollama.ModelLlama32)
+	// Output: llama3.2
+}
+
 // ExampleTool shows a tool definition passed with a request.
 func ExampleTool() {
 	tool := ai.Tool{
