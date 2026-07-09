@@ -14,7 +14,8 @@ Initial release, built on the `github.com/goloop/ai` interface.
   `/api/chat`, with tool use and image input. Streaming reads Ollama's
   newline-delimited JSON.
 - Native `ChatCompletion` and `ChatStream`.
-- Embeddings (`Embed`) and installed-model listing (`Models`).
+- Embeddings (`Embed`), installed-model listing (`Models`) and per-model
+  details (`Show`: template, parameters, capabilities and context length).
 - Functional options: `WithBaseURL`, `WithHTTPClient`, `WithTimeout`,
   `WithMaxRetries`, `WithHeader`. Optional bearer token for authenticated
   proxies.

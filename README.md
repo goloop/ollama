@@ -14,7 +14,7 @@ endpoints on top.
   through `iter.Seq2`.
 - Tool use (function calling) and image input.
 - Native `ChatCompletion` and `ChatStream` over `/api/chat`.
-- Embeddings and the installed-model list.
+- Embeddings, the installed-model list and per-model details (`Show`).
 - Retries on 429 and 5xx with backoff; normalized, typed API errors.
 - Depends only on `github.com/goloop/ai` and the standard library.
 
@@ -80,6 +80,7 @@ for chunk, err := range c.Stream(ctx, req) {
 ```go
 vecs, err := c.Embed(ctx, ollama.ModelLlama32, "hello", "world")
 models, err := c.Models(ctx) // what is installed locally
+info, err := c.Show(ctx, ollama.ModelLlama32) // template, params, capabilities
 ```
 
 ## Documentation
