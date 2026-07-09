@@ -79,8 +79,9 @@ type ChatResponse struct {
 // response. Use it for provider-specific options; use Generate for the shared,
 // provider-agnostic path.
 func (c *Client) ChatCompletion(ctx context.Context, req *ChatRequest) (*ChatResponse, error) {
-	req.Stream = false
-	out, _, err := c.chatCompletion(ctx, req)
+	r := *req // do not mutate the caller's request
+	r.Stream = false
+	out, _, err := c.chatCompletion(ctx, &r)
 	return out, err
 }
 

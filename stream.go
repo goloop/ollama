@@ -103,8 +103,9 @@ func (c *Client) ChatStream(
 
 // openStream opens the streaming /api/chat connection.
 func (c *Client) openStream(ctx context.Context, req *ChatRequest) (*http.Response, error) {
-	req.Stream = true
-	body, err := json.Marshal(req)
+	r := *req // do not mutate the caller's request
+	r.Stream = true
+	body, err := json.Marshal(&r)
 	if err != nil {
 		return nil, err
 	}
