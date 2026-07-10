@@ -71,6 +71,9 @@ for chunk, err := range c.Stream(ctx, req) {
 }
 ```
 
+If the stream ends before Ollama marks it done, `Stream` yields
+`io.ErrUnexpectedEOF` rather than silently reporting a completed response.
+
 ## Native chat
 
 For provider-only options build a `ChatRequest` and call `ChatCompletion` or
