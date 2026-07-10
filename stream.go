@@ -32,6 +32,7 @@ func (c *Client) Stream(
 		defer resp.Body.Close()
 
 		var usage ai.Usage
+		var done bool
 		for line, err := range jsonLines(resp.Body) {
 			if err != nil {
 				yield(ai.Chunk{}, err)
@@ -63,8 +64,14 @@ func (c *Client) Stream(
 				}
 			}
 			if chunk.Done {
+				done = true
 				break
 			}
+		}
+		// The stream ended without a final object marked done: it was truncated.
+		if !done {
+			yield(ai.Chunk{}, io.ErrUnexpectedEOF)
+			return
 		}
 		final := usage
 		yield(ai.Chunk{Done: true, Usage: &final}, nil)
