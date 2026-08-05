@@ -10,6 +10,7 @@ Ukrainian version: **[DOC.UK.md](DOC.UK.md)**.
 - [Mental model](#mental-model)
 - [Creating a client](#creating-a-client)
 - [Generate and Stream](#generate-and-stream)
+- [Structured output](#structured-output)
 - [Native chat](#native-chat)
 - [Tools and images](#tools-and-images)
 - [Embeddings](#embeddings)
@@ -73,6 +74,35 @@ for chunk, err := range c.Stream(ctx, req) {
 
 If the stream ends before Ollama marks it done, `Stream` yields
 `io.ErrUnexpectedEOF` rather than silently reporting a completed response.
+
+## Structured output
+
+`ai.Request.Format` maps onto the provider's own `format` field, so a request for JSON
+is enforced by the provider rather than merely asked for:
+
+```go
+resp, err := c.Generate(ctx, &ai.Request{
+	Model:    "the-model",
+	Messages: []ai.Message{ai.UserText("Draft SEO fields for this article.")},
+	Format: &ai.Format{
+		Type:   ai.FormatJSONSchema,
+		Name:   "seo",
+		Schema: schema,
+	},
+})
+
+var seo SEO
+err = resp.JSON(&seo)
+```
+
+`ai.FormatJSON` sends the bare word `"json"` and `ai.FormatJSONSchema` sends
+the schema directly - there is no wrapper object around it.
+
+
+`ai.Response.Format` is `ai.FormatNative`: this provider enforces every shape
+it accepts. Which models support schema mode is the provider's business - there
+is no capability table here, so an unsupported pairing is reported by the
+provider itself.
 
 ## Native chat
 

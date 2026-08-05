@@ -17,6 +17,8 @@ endpoints on top.
 - Embeddings, the installed-model list and per-model details (`Show`).
 - Retries on 429 and 5xx with backoff; normalized, typed API errors.
 - Depends only on `github.com/goloop/ai` and the standard library.
+- Structured output: `ai.Format` maps onto the server's `format` field
+  (`"json"` or a schema); read the reply with `resp.JSON(&v)`.
 
 ## Installation
 

@@ -114,7 +114,9 @@ func (c *Client) Generate(ctx context.Context, req *ai.Request) (*ai.Response, e
 	if err != nil {
 		return nil, err
 	}
-	return ollamaToResponse(out, raw), nil
+	resp := ollamaToResponse(out, raw)
+	resp.Format = formatMode(req.Format)
+	return resp, nil
 }
 
 // chatRequest converts an ai.Request into a native ChatRequest.
@@ -151,7 +153,41 @@ func (c *Client) chatRequest(req *ai.Request, stream bool) (*ChatRequest, error)
 		opt.NumPredict != 0 || len(opt.Stop) > 0 {
 		cr.Options = opt
 	}
+
+	format, err := responseFormat(req.Format)
+	if err != nil {
+		return nil, err
+	}
+	cr.Format = format
 	return cr, nil
+}
+
+// responseFormat renders an [ai.Format] as this provider's format field, which
+// takes either the word "json" or a schema directly - there is no wrapper
+// object around it. It returns nil when nothing was asked for.
+func responseFormat(f *ai.Format) (json.RawMessage, error) {
+	if f == nil || f.Type == ai.FormatText {
+		return nil, nil
+	}
+
+	switch f.Type {
+	case ai.FormatJSON:
+		return json.RawMessage(`"json"`), nil
+	case ai.FormatJSONSchema:
+		return f.Schema, nil
+	default:
+		return nil, ai.ErrBadFormat
+	}
+}
+
+// formatMode reports how the request's format was satisfied. Both shapes this
+// driver accepts are enforced by the server itself, which constrains decoding
+// rather than merely asking the model.
+func formatMode(f *ai.Format) ai.FormatMode {
+	if f == nil || f.Type == ai.FormatText {
+		return ai.FormatNone
+	}
+	return ai.FormatNative
 }
 
 func ollamaMessages(req *ai.Request) []Message {
