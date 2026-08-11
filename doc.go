@@ -20,5 +20,15 @@
 // or a schema directly - so a request for JSON is enforced rather than merely
 // asked for, and ai.Response.JSON decodes the reply.
 //
+// # Hosted capabilities
+//
+// Models here run on the machine that serves them, and that server has no
+// search to run. ai.Hosted is refused with ai.ErrNoHosted.
+//
+// The refusal is the documented behavior, not a gap waiting to be filled
+// in silence: an answer produced without the search that was asked for
+// looks exactly like one produced with it. A caller who would rather have
+// the answer anyway asks again without ai.Request.Hosted.
+//
 // It depends only on goloop/ai and the standard library.
 package ollama

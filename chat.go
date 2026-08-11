@@ -124,6 +124,9 @@ func (c *Client) chatRequest(req *ai.Request, stream bool) (*ChatRequest, error)
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
+	if err := checkHosted(req); err != nil {
+		return nil, err
+	}
 
 	cr := &ChatRequest{
 		Model:    req.Model,
