@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-08-11
+
+Minor release, on `ai` v1.1.0.
+
+### Added
+- `Capabilities` describes what this driver can be asked for. It reports no
+  hosted capability, which is the same answer `ai.Request.Hosted` already gets
+  from this driver, now available before the call instead of only as an error
+  after it. A test pins the two together.
+- A provider refusal that means "this model cannot produce that format" is now
+  translated into `ai.ErrNoFormat`, so an application degrades with one
+  `errors.Is` instead of matching English prose in an error message. The
+  provider's own `ai.APIError` is wrapped, not replaced, and stays reachable
+  with `errors.As`. The rules are deliberately narrow - only a 400, only a
+  format the caller asked for, only an error naming that exact field - because
+  mistaking a genuinely bad request for a missing feature would retry it
+  forever.
+
 ## [1.0.0] - 2026-08-11
 
 First stable release, on `ai` v1.0.0.

@@ -112,7 +112,7 @@ func (c *Client) Generate(ctx context.Context, req *ai.Request) (*ai.Response, e
 	}
 	out, raw, err := c.chatCompletion(ctx, cr)
 	if err != nil {
-		return nil, err
+		return nil, wrapUnsupportedCapability(req, err)
 	}
 	resp := ollamaToResponse(out, raw)
 	resp.Format = formatMode(req.Format)

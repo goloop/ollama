@@ -26,7 +26,7 @@ func (c *Client) Stream(
 		}
 		resp, err := c.openStream(ctx, cr)
 		if err != nil {
-			yield(ai.Chunk{}, err)
+			yield(ai.Chunk{}, wrapUnsupportedCapability(req, err))
 			return
 		}
 		defer resp.Body.Close()
