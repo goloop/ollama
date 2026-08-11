@@ -12,6 +12,7 @@ Ukrainian version: **[DOC.UK.md](DOC.UK.md)**.
 - [Generate and Stream](#generate-and-stream)
 - [Structured output](#structured-output)
 - [Hosted web search](#hosted-web-search)
+- [Capabilities and model-level refusals](#capabilities-and-model-level-refusals)
 - [Native chat](#native-chat)
 - [Tools and images](#tools-and-images)
 - [Embeddings](#embeddings)
@@ -156,6 +157,20 @@ The refusal is the documented behavior, not a gap left in silence: an answer
 produced without the search that was asked for looks exactly like one produced
 with it, so failing loudly is the only way you can tell them apart. If you would
 rather have the answer anyway, ask again without `Hosted`.
+
+## Capabilities and model-level refusals
+
+This driver implements `ai.Capable` and reports no hosted capability - the
+same answer `ai.Request.Hosted` already gets here, now available before the
+call instead of only as an error after it. A conformance test pins the two
+together.
+
+A refusal the provider reports only as a 400 - "this model cannot produce that
+format" - now arrives wrapped in `ai.ErrNoFormat`, so one `errors.Is` replaces
+matching English prose in an error message; the provider's own `ai.APIError`
+stays reachable with `errors.As`. The wrapping is deliberately narrow: only a
+400, only a format the request actually asked for, only an error naming that
+exact field.
 
 ## Options and errors
 
