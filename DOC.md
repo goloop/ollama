@@ -11,6 +11,7 @@ Ukrainian version: **[DOC.UK.md](DOC.UK.md)**.
 - [Creating a client](#creating-a-client)
 - [Generate and Stream](#generate-and-stream)
 - [Structured output](#structured-output)
+- [Hosted web search](#hosted-web-search)
 - [Native chat](#native-chat)
 - [Tools and images](#tools-and-images)
 - [Embeddings](#embeddings)
@@ -142,6 +143,19 @@ models, err := c.Models(ctx) // installed models (the /api/tags endpoint)
 models[0].Name               // "llama3.2:latest"
 models[0].Details.ParameterSize
 ```
+
+## Hosted web search
+
+`ai.Request.Hosted` is answered with `ai.ErrNoHosted` before the request
+leaves.
+
+Models here run on the machine that serves them, and that server has no search
+to run. There is no endpoint to route to and no sources to return.
+
+The refusal is the documented behavior, not a gap left in silence: an answer
+produced without the search that was asked for looks exactly like one produced
+with it, so failing loudly is the only way you can tell them apart. If you would
+rather have the answer anyway, ask again without `Hosted`.
 
 ## Options and errors
 

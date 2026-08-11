@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-08-11
+
+First stable release, on `ai` v1.0.0.
+
+### Added
+- `ai.Request.Hosted` is answered with `ai.ErrNoHosted` before the request
+  leaves, because models here run on the machine that serves them, and that server has no
+  search to run.
+  That refusal is the documented behavior rather than a gap left in silence:
+  an answer produced without the search that was asked for looks exactly like
+  one produced with it, so failing loudly is the only way a caller can tell
+  them apart. A caller who would rather have the answer anyway asks again
+  without `Hosted`.
+- Tests pin it, including that nothing is sent to the provider.
+
 ## [0.2.2] - 2026-08-05
 
 ### Documentation

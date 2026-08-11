@@ -9,7 +9,6 @@ works like every other goloop AI provider, and exposes Ollama's native
 endpoints on top.
 
 ## Features
-
 - Chat: `Generate` for a single response, `Stream` for token-by-token output
   through `iter.Seq2`.
 - Tool use (function calling) and image input.
@@ -19,6 +18,8 @@ endpoints on top.
 - Depends only on `github.com/goloop/ai` and the standard library.
 - Structured output: `ai.Format` maps onto the server's `format` field
   (`"json"` or a schema); read the reply with `resp.JSON(&v)`.
+- Hosted capabilities: `ai.Request.Hosted` is refused with `ai.ErrNoHosted`,
+  because a local model server has no search to run.
 
 ## Installation
 
