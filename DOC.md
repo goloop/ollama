@@ -189,3 +189,7 @@ if errors.As(err, &apiErr) && apiErr.Status == http.StatusNotFound {
 
 Requests missing a model or messages fail before the network with
 `ai.ErrNoModel` or `ai.ErrNoMessages`.
+
+## Release v1.1.4
+
+Report malformed stream events and reject nil requests.

@@ -38,9 +38,10 @@ func (c *Client) Stream(
 				yield(ai.Chunk{}, err)
 				return
 			}
-			var chunk ChatResponse
-			if json.Unmarshal([]byte(line), &chunk) != nil {
-				continue
+			chunk, err := decodeStreamResponse([]byte(line))
+			if err != nil {
+				yield(ai.Chunk{}, err)
+				return
 			}
 			if chunk.PromptEvalCount > 0 || chunk.EvalCount > 0 {
 				usage = ai.Usage{
@@ -97,9 +98,10 @@ func (c *Client) ChatStream(
 				yield(ChatResponse{}, err)
 				return
 			}
-			var chunk ChatResponse
-			if json.Unmarshal([]byte(line), &chunk) != nil {
-				continue
+			chunk, err := decodeStreamResponse([]byte(line))
+			if err != nil {
+				yield(ChatResponse{}, err)
+				return
 			}
 			if !yield(chunk, nil) {
 				return
@@ -110,6 +112,9 @@ func (c *Client) ChatStream(
 
 // openStream opens the streaming /api/chat connection.
 func (c *Client) openStream(ctx context.Context, req *ChatRequest) (*http.Response, error) {
+	if req == nil {
+		return nil, ai.ErrNoRequest
+	}
 	r := *req // do not mutate the caller's request
 	r.Stream = true
 	body, err := json.Marshal(&r)
@@ -146,4 +151,18 @@ func jsonLines(r io.Reader) iter.Seq2[string, error] {
 			yield("", err)
 		}
 	}
+}
+
+func decodeStreamResponse(data []byte) (ChatResponse, error) {
+	var wire struct {
+		ChatResponse
+		Error string `json:"error"`
+	}
+	if err := json.Unmarshal(data, &wire); err != nil {
+		return ChatResponse{}, err
+	}
+	if wire.Error != "" {
+		return ChatResponse{}, parseError(0, data)
+	}
+	return wire.ChatResponse, nil
 }

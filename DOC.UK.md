@@ -184,3 +184,7 @@ if errors.As(err, &apiErr) && apiErr.Status == http.StatusNotFound {
 
 Запити без моделі чи повідомлень падають до мережі з `ai.ErrNoModel` або
 `ai.ErrNoMessages`.
+
+## Реліз v1.1.4
+
+Native chat та stream повертають ai.ErrNoRequest для nil-запиту. Потік завершується з помилкою на пошкодженому JSON або error-повідомленні сервера.
