@@ -188,3 +188,7 @@ if errors.As(err, &apiErr) && apiErr.Status == http.StatusNotFound {
 ## Реліз v1.1.4
 
 Native chat та stream повертають ai.ErrNoRequest для nil-запиту. Потік завершується з помилкою на пошкодженому JSON або error-повідомленні сервера.
+
+## Поведінка запиту
+
+Для холодної моделі задайте довше очікування заголовків, наприклад `ollama.WithTimeout(2*time.Minute)`. Після заголовків тривалість потоку обмежує контекст запиту.

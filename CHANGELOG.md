@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Keep long responses streaming and check completion data.
 
+Document cold starts and use the released core.
+
 ## [1.1.4] - 2026-10-18
 
 Report malformed stream events and reject nil requests.

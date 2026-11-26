@@ -193,3 +193,7 @@ Requests missing a model or messages fail before the network with
 ## Release v1.1.4
 
 Report malformed stream events and reject nil requests.
+
+## Request behavior
+
+For a cold local model, use a longer header deadline such as `ollama.WithTimeout(2*time.Minute)`. Use the request context to bound streaming after headers arrive.
