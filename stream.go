@@ -103,10 +103,11 @@ func (c *Client) ChatStream(
 				yield(ChatResponse{}, err)
 				return
 			}
-			if !yield(chunk, nil) {
+			if !yield(chunk, nil) || chunk.Done {
 				return
 			}
 		}
+		yield(ChatResponse{}, io.ErrUnexpectedEOF)
 	}
 }
 
@@ -121,13 +122,16 @@ func (c *Client) openStream(ctx context.Context, req *ChatRequest) (*http.Respon
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.opts.Do(ctx, http.MethodPost, c.opts.BaseURL+"/api/chat", body, c.headers())
+	resp, err := c.opts.DoStream(ctx, http.MethodPost, c.opts.BaseURL+"/api/chat", body, c.headers())
 	if err != nil {
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		data, _ := io.ReadAll(resp.Body)
+		data, readErr := ai.ReadResponse(resp.Body)
 		resp.Body.Close()
+		if readErr != nil {
+			return nil, readErr
+		}
 		return nil, parseError(resp.StatusCode, data)
 	}
 	return resp, nil

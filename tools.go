@@ -3,7 +3,8 @@ package ollama
 import (
 	"context"
 	"encoding/json"
-	"io"
+	"github.com/goloop/ai"
+
 	"net/http"
 )
 
@@ -31,7 +32,7 @@ func (c *Client) send(
 	}
 	defer resp.Body.Close()
 
-	data, err := io.ReadAll(resp.Body)
+	data, err := ai.ReadResponse(resp.Body)
 	if err != nil {
 		return nil, resp.StatusCode, err
 	}
